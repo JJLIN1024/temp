@@ -8,15 +8,37 @@
 #include "editor.h"
 
 void enableRawMode(struct termios *orig_termios) {
+  if (tcgetattr(STDIN_FILENO, orig_termios) == -1) {
+    log_err("enableRawMode");
+    exit(1);
+  }
+  /* Save original terminal attribute for disableRawMode() to revert the
+   * terminal back to its original state when the program ends. Config raw to
+   * suits our need when execute the editor.
+   */
   struct termios raw = *orig_termios;
-  if (tcgetattr(STDIN_FILENO, &raw) == -1) log_err("tcgetattr");
 
-  raw.c_lflag &= ~(ECHO);
+  /*
+  termios attribute setting reference:
+  https://man7.org/linux/man-pages/man0/termios.h.0p.html
+  */
+  raw.c_iflag &= ~(BRKINT | ICRNL | INPCK | ISTRIP | IXON); /* tradition */
+  raw.c_oflag &= ~(OPOST);
+  raw.c_cflag |= (CS8);
+  /* TODO: will ISIG affect signal when dynamically adjust windows size? */
+  raw.c_lflag &= ~(ECHO | ICANON | IEXTEN | ISIG);
+  raw.c_cc[VMIN] = 0;
+  raw.c_cc[VTIME] = 1;
 
-  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) log_err("tcsetattr");
+  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) {
+    log_err("enableRawMode");
+    exit(1);
+  }
 }
 
 void disableRawMode(struct termios *orig_termios) {
-  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, orig_termios) == -1)
-    log_err("tcsetattr");
+  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, orig_termios) == -1) {
+    log_err("disableRawMode");
+    exit(1);
+  }
 }

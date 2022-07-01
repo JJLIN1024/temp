@@ -1,3 +1,6 @@
+#ifndef __editor_h__
+#define __editor_h__
+
 #include "termios.h"
 #include "time.h"
 
@@ -14,3 +17,5 @@ typedef struct editorConfig {
 } editorConfig;
 
 void initEditor(editorConfig *E);
+
+#endif

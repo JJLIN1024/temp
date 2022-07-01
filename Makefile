@@ -1,11 +1,12 @@
 CC = gcc
 CFLAGS = -std=c99 -Wall
-objects = kilo.o terminal.o editor.o
+objects = main.o terminal.o editor.o
+target = min
 
-all: kilo
+all: $(target)
 
-kilo: $(objects)
-	$(CC) $(CFLAGS) $(objects) -o kilo
+$(target): $(objects)
+	$(CC) $(CFLAGS) $(objects) -o $@
 
 $(objects): dbg.h
 
@@ -14,6 +15,6 @@ terminal.o: terminal.h editor.h
 editor.o: editor.h
 
 clean:
-	rm kilo $(objects)
+	rm $(target) $(objects)
 
 .PHONY : clean

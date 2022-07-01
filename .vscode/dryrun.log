@@ -1,5 +1,0 @@
-make --dry-run --keep-going --print-directory
-make: Entering directory `/Users/linchiachieh/KiloTextEditor'
-make: Nothing to be done for `all'.
-make: Leaving directory `/Users/linchiachieh/KiloTextEditor'
- 

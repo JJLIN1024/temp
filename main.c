@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -16,9 +17,14 @@ int main(int argc, char **argv) {
   initEditor(&E);
   enableRawMode(&E.orig_termios);
 
-  char c;
-  while (read(STDIN_FILENO, &c, 1) != -1 && c != 'q') {
+  while (1) {
+    char c = '\0';
+    if ((read(STDIN_FILENO, &c, 1) == -1) && (errno != EAGAIN)) {
+      log_err("read from input fail");
+      exit(1);
+    }
     printf("%c\n", c);
+    if (c == 'q') break;
   }
 
   disableRawMode(&E.orig_termios);
