@@ -1,0 +1,9 @@
+{
+  "makefile.extensionOutputFolder": "./.vscode",
+  "files.associations": {
+    "dbg.h": "c",
+    "termios.h": "c",
+    "editor.h": "c",
+    "unistd.h": "c"
+  }
+}
