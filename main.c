@@ -10,6 +10,7 @@
 editorConfig E;
 static void sigwinchHandler(int sig) {
   if (SIGWINCH == sig) {
+    getWindowSize(&E);
     editorRefreshScreen(&E);
   }
 }
@@ -19,8 +20,8 @@ int main(int argc, char **argv) {
     log_info("Usage: kilo <filename>(optional)");
   }
 
-  initEditor(&E);
   enableRawMode(&E.orig_termios);
+  initEditor(&E);
 
   /* listen for Window Size change */
   signal(SIGWINCH, sigwinchHandler);
