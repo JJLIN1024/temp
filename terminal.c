@@ -8,10 +8,7 @@
 #include "editor.h"
 
 void enableRawMode(struct termios *orig_termios) {
-  if (tcgetattr(STDIN_FILENO, orig_termios) == -1) {
-    log_err("enableRawMode");
-    exit(1);
-  }
+  check(tcgetattr(STDIN_FILENO, orig_termios) == -1, "enableRawMode");
   /* Save original terminal attribute for disableRawMode() to revert the
    * terminal back to its original state when the program ends. Config raw to
    * suits our need when execute the editor.
@@ -30,15 +27,10 @@ void enableRawMode(struct termios *orig_termios) {
   raw.c_cc[VMIN] = 0;
   raw.c_cc[VTIME] = 1;
 
-  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) {
-    log_err("enableRawMode");
-    exit(1);
-  }
+  check(tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1, "enableRawMode");
 }
 
 void disableRawMode(struct termios *orig_termios) {
-  if (tcsetattr(STDIN_FILENO, TCSAFLUSH, orig_termios) == -1) {
-    log_err("disableRawMode");
-    exit(1);
-  }
+  check(tcsetattr(STDIN_FILENO, TCSAFLUSH, orig_termios) == -1,
+        "disableRawMode");
 }
